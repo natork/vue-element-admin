@@ -168,6 +168,18 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/admin-users',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/admin/users'),
+        name: 'Users',
+        meta: { title: 'users', icon: 'icon', noCache: true }
+      }
+    ]
+  },
 
   /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,

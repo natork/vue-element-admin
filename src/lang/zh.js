@@ -3,6 +3,7 @@ export default {
     dashboard: '首页',
     documentation: '文档',
     guide: '引导页',
+    users: '用户管理',
     permission: '权限测试页',
     rolePermission: '角色权限',
     pagePermission: '页面权限',
@@ -92,6 +93,9 @@ export default {
     delete: '删除',
     confirm: '确定',
     cancel: '取消'
+  },
+  user: {
+    name: '用户名'
   },
   guide: {
     description: '引导页对于一些第一次进入项目的人很有用，你可以简单介绍下项目的功能。本 Demo 是基于',
