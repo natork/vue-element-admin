@@ -13,6 +13,10 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import axios from 'axios'
+import VueKeyCloak from '@dsb-norge/vue-keycloak-js'
+import { setToken } from '@/utils/auth'
+
 import i18n from './lang' // Internationalization
 import './icons' // icon
 import './permission' // permission control
@@ -37,10 +41,37 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
-new Vue({
-  el: '#app',
-  router,
-  store,
-  i18n,
-  render: h => h(App)
+function tokenInterceptor() {
+  axios.interceptors.request.use(config => {
+    config.headers.Authorization = `Bearer ${Vue.prototype.$keycloak.token}`
+    return config
+  }, error => {
+    return Promise.reject(error)
+  })
+}
+
+Vue.use(VueKeyCloak, {
+  config: {
+    url: 'http://localhost:8080/auth',
+    realm: 'natork',
+    clientId: 'vue'
+  },
+  onReady: (keycloak) => {
+    console.log(`I wonder what Keycloak returns: ${JSON.stringify(keycloak)}`)
+    store.commit('user/SET_TOKEN', keycloak.token)
+    const { roles } = keycloak.realmAccess
+    store.commit('user/SET_ROLES', roles)
+    store.commit('user/SET_NAME', keycloak.tokenParsed.preferred_username)
+    store.commit('user/SET_AVATAR', keycloak.tokenParsed.avatar)
+    // store.commit('SET_INTRODUCTION', introduction)
+    setToken(keycloak.token)
+    tokenInterceptor()
+    new Vue({
+      el: '#app',
+      router,
+      store,
+      i18n,
+      render: h => h(App)
+    })
+  }
 })
