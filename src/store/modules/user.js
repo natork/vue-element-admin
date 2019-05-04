@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, getCurrentUser } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -8,6 +8,7 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
+  roles_shadow: [],
   route: false
 }
 
@@ -29,6 +30,9 @@ const mutations = {
   },
   SET_ROUTE: (state, isRouteSet) => {
     state.route = isRouteSet
+  },
+  SET_ROLES_SHADOW: (state, roles) => {
+    state.roles_shadow = roles
   }
 }
 
@@ -70,6 +74,22 @@ const actions = {
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
         resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getCurrentUser({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getCurrentUser().then(response => {
+        console.log(JSON.stringify(response))
+        const { roles, name, introduction } = response
+        commit('SET_ROLES', roles)
+        commit('SET_NAME', name)
+        // commit('SET_AVATAR', avatar)
+        commit('SET_INTRODUCTION', introduction)
+        resolve(response)
       }).catch(error => {
         reject(error)
       })

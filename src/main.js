@@ -26,6 +26,7 @@ import * as filters from './filters' // global filters
 
 import { mockXHR } from '../mock' // simulation data
 
+console.log('NODE_ENV: ' + process.env.NODE_ENV)
 // mock api in github pages site build
 if (process.env.NODE_ENV === 'production') { mockXHR() }
 
@@ -52,15 +53,15 @@ function tokenInterceptor() {
 
 Vue.use(VueKeyCloak, {
   config: {
-    url: 'http://localhost:8080/auth',
-    realm: 'natork',
-    clientId: 'vue'
+    url: 'http://39.106.139.221:8080/auth',
+    realm: 'hkrsoft',
+    clientId: 'ett-ui'
   },
   onReady: (keycloak) => {
     console.log(`I wonder what Keycloak returns: ${JSON.stringify(keycloak)}`)
     store.commit('user/SET_TOKEN', keycloak.token)
-    const { roles } = keycloak.realmAccess
-    store.commit('user/SET_ROLES', roles)
+    // const { roles } = keycloak.realmAccess
+    // store.commit('user/SET_ROLES', roles)
     store.commit('user/SET_NAME', keycloak.tokenParsed.preferred_username)
     store.commit('user/SET_AVATAR', keycloak.tokenParsed.avatar)
     // store.commit('SET_INTRODUCTION', introduction)

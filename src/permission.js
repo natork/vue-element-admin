@@ -25,20 +25,26 @@ router.beforeEach(async(to, from, next) => {
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
-        const routeSet = store.getters.routeSet
-        if (!routeSet) {
-          // generate accessible routes map based on roles
-          const accessRoutes = await store.dispatch('permission/generateRoutes', store.getters.roles)
-          store.commit('user/SET_ROUTE', true)
-          // dynamically add accessible routes
-          router.addRoutes(accessRoutes)
-        }
+        // const routeSet = store.getters.routeSet
+        // if (!routeSet) {
+        //   // generate accessible routes map based on roles
+        //   const accessRoutes = await store.dispatch('permission/generateRoutes', store.getters.roles)
+        //   store.commit('user/SET_ROUTE', true)
+        //   // dynamically add accessible routes
+        //   router.addRoutes(accessRoutes)
+        // }
         next()
       } else {
         try {
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const { roles } = await store.dispatch('user/getInfo')
+          // await store.dispatch('user/getInfo')
+          const { roles } = await store.dispatch('user/getCurrentUser')
+          // store.getters.roles_shadow
+          // store.commit('user/SET_ROLES', roles)
+          // store.commit('user/SET_NAME', 'cww')
+          // store.commit('user/SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+          // store.commit('user/SET_INTRODUCTION', 'introduction')
 
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)

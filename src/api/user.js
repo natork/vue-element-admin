@@ -23,3 +23,10 @@ export function logout() {
   })
 }
 
+export function getCurrentUser() {
+  return request({
+    url: '/users/detail',
+    method: 'get'
+  })
+}
+
